@@ -4,71 +4,7 @@ package br.com.devrodrigues.core
 
 import br.com.devrodrigues.core.StatePlayed.EMPTY
 import java.util.Collections.min
-
-class GameSimulation(
-    private var board: Board,
-    private var turn: StatePlayed,
-    private var trials: Int = 2,
-    private var verbose: Boolean = true
-) {
-
-    private var games: List<Game>
-    private var oPlayer: RandomPlayer = RandomPlayer(StatePlayed.CIRCLE, verbose)
-    private var xPlayer: RandomPlayer = RandomPlayer(StatePlayed.CROSS, verbose)
-
-    init {
-        """
-            Class for simulation N trial games for guessing the best move for AI Agent
-        """
-
-        val nextPlayer = when (turn) {
-            StatePlayed.CROSS -> xPlayer
-            StatePlayed.CIRCLE -> oPlayer
-            else -> throw Exception("Invalid turn")
-        }
-        this.games = List(trials) {
-            Game(
-                xPlayer = xPlayer, oPlayer = oPlayer, board = board.copy(), nextPlayer = nextPlayer, verbose = verbose
-            )
-        }
-    }
-
-    fun simulate(): Int {
-        """
-        Simulate several games
-        """
-
-        val availableMoves = board.getAvailableMoves()
-        val scores = availableMoves.associateWith { 0 }.toMutableMap()
-
-        for (game in games) {
-            if (this.verbose) {
-                println("=".repeat(80))
-            }
-
-            game.play()
-
-            if (game.winner == null) {
-                continue
-            }
-
-            var coef = 1
-            if (game.winner?.symbol != this.turn) {
-                coef = -1
-            }
-
-            for (position in availableMoves) {
-                if (game.board.pos(position) == this.turn.value) {
-                    scores[position]?.plus(coef)
-                } else if (game.board.pos(position) == EMPTY.value) {
-                    scores[position]?.minus(coef)
-                }
-            }
-        }
-
-        return scores.maxByOrNull { it.value }!!.key
-    }
-}
+import java.util.Objects.isNull
 
 class Game(
     private val oPlayer: BasePlayer,
@@ -237,7 +173,11 @@ fun minimax(board: Board, depth: Int, isMaximizing: Boolean): Int {
         }
     }
 
-    return score!!
+    return if (isNull(score)) {
+        0
+    } else {
+        score!!
+    }
 }
 
 fun MINIMAX_SCORES() = mapOf(

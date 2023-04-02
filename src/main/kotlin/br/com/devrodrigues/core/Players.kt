@@ -33,53 +33,6 @@ class HumanPlayer(symbol: StatePlayed, verbose: Boolean = false) : BasePlayer(
     }
 }
 
-class RandomPlayer(symbol: StatePlayed, verbose: Boolean) : BasePlayer(
-    symbol = symbol,
-    verbose = verbose
-) {
-    override fun move(board: Board) {
-        """
-        Move over board
-        """
-        val availableMoves = board.getAvailableMoves()
-        val posIndex = (availableMoves.indices).random()
-        val position = availableMoves[posIndex]
-
-        if (verbose) {
-            println("Player ${symbol.value} will play at $position")
-        }
-        board.play(symbol, position)
-    }
-}
-
-class AIAgentPlayer(symbol: StatePlayed, verbose: Boolean): BasePlayer(
-    symbol = symbol,
-    verbose = verbose
-) {
-    override fun move(board: Board) {
-        """
-        A first strategy for won this game
-        """
-        val simulation = GameSimulation(board, symbol)
-        val position = simulation.simulate()
-        board.play(symbol, position)
-    }
-}
-
-class MonteCarloAgentPlayer(symbol: StatePlayed, verbose: Boolean): BasePlayer(
-    symbol = symbol,
-    verbose = verbose
-) {
-    override fun move(board: Board) {
-        """
-        Montecarlo implementation for intelligent agent
-        """
-        val simulation = GameSimulation(board, symbol)
-        val position = simulation.simulate()
-        board.play(symbol, position)
-    }
-}
-
 class MiniMaxAgentPlayer(symbol: StatePlayed, verbose: Boolean): BasePlayer(
     symbol = symbol,
     verbose = verbose
