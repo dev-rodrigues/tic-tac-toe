@@ -10,7 +10,7 @@ abstract class BasePlayer(var symbol: StatePlayed, var verbose: Boolean = false)
     }
 }
 
-class HumanPlayer(symbol: StatePlayed, verbose: Boolean = false) : BasePlayer(
+class HumanAgentPlayer(symbol: StatePlayed, verbose: Boolean = false) : BasePlayer(
     symbol = symbol,
     verbose = verbose
 ) {
